@@ -1,15 +1,23 @@
 
-paymentModel = require("../models").Payment
+const paymentModel = require("../models").Payment
+const cryptoService = require("../services/crypto.service")
+
+
+
+// decipher = crypto.createDecipheriv('aes-256-ccm',key)
+
+
 
 async function create (req,res){
+    fields = req.body
 
-    console.log(req.body)
+    fields.cardNumber = await cryptoService.encrypt(fields.cardNumber)
+    fields.cvv = await cryptoService.encrypt(fields.cvv)
+    
     try {
      
     recordCreated = await paymentModel.create(
-        req.body
-    )
-    console.log(recordCreated)
+        fields    )
     res.status(200).send({status:1,message:"Success",data:[]})   
     
     } catch (error) {
