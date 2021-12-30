@@ -1,15 +1,18 @@
 
 const paymentModel = require("../models").Payment
 const cryptoService = require("../services/crypto.service")
-
-
-
-// decipher = crypto.createDecipheriv('aes-256-ccm',key)
+const cardValidationService = require("../services/cardValidation.service")
 
 
 
 async function create (req,res){
     fields = req.body
+    
+    isCardValid = await cardValidationService.isValidCardNumber(fields.cardNumber)
+    
+    if(!isCardValid){
+        return res.status(400).send({message: "Invalid card number"})
+    }
 
     fields.cardNumber = await cryptoService.encrypt(fields.cardNumber)
     fields.cvv = await cryptoService.encrypt(fields.cvv)

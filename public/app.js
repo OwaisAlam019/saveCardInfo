@@ -48,12 +48,14 @@ window.onload = function () {
           };
         console.log(settings);          
           $.ajax(settings).done(function (response) {
-            console.log(response);
+            console.log(response.headers);
             if(response.status == 1){
                 alert(response.message);
             }else{
                 alert(response.message);
             }
+          }).catch(function (error) {
+            alert(error.responseJSON.message);
           });
     }
 
